@@ -1,0 +1,43 @@
+# .gitignore for dbt project
+
+# dbt
+target/
+dbt_packages/
+logs/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Credentials
+profiles.yml
+.env
+*.key
+*.pem
+
+# Data files (large CSVs)
+*.csv
+!seeds/*.csv
+
+# Compiled files
+*.pyc
+dbt_internal_packages/

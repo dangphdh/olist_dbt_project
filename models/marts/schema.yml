@@ -1,0 +1,96 @@
+version: 2
+
+models:
+  - name: fct_sales
+    description: Fact table containing all sales transactions with enriched dimensions
+    columns:
+      - name: order_id
+        description: Unique order identifier
+        tests:
+          - not_null
+          
+      - name: order_item_id
+        description: Line item number within the order
+        tests:
+          - not_null
+          
+      - name: order_date
+        description: Date when the order was placed
+        tests:
+          - not_null
+          
+      - name: customer_id
+        description: Customer who placed the order
+        tests:
+          - not_null
+          
+      - name: product_id
+        description: Product that was purchased
+        tests:
+          - not_null
+          
+      - name: seller_id
+        description: Seller who fulfilled the order
+        tests:
+          - not_null
+          
+      - name: total_item_value
+        description: Total value of the line item (price + freight)
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+              
+  - name: fct_daily_sales_metrics
+    description: Daily aggregated sales metrics for reporting and analysis
+    columns:
+      - name: order_date
+        description: Date of the orders
+        tests:
+          - unique
+          - not_null
+          
+      - name: total_revenue
+        description: Total revenue for the day
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+              
+  - name: fct_product_category_performance
+    description: Performance metrics aggregated by product category
+    columns:
+      - name: category
+        description: Product category name in English
+        tests:
+          - unique
+          - not_null
+          
+      - name: total_revenue
+        description: Total revenue for this category
+        tests:
+          - not_null
+          
+  - name: dim_customers
+    description: Customer dimension table with lifetime metrics and segmentation
+    columns:
+      - name: customer_id
+        description: Unique customer identifier
+        tests:
+          - unique
+          - not_null
+          
+      - name: customer_segment
+        description: Customer segment (loyal, repeat, one_time)
+        tests:
+          - accepted_values:
+              values: ['loyal', 'repeat', 'one_time']
+              
+  - name: dim_products
+    description: Product dimension table with enriched attributes and metrics
+    columns:
+      - name: product_id
+        description: Unique product identifier
+        tests:
+          - unique
+          - not_null

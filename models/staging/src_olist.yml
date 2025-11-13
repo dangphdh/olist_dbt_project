@@ -1,0 +1,68 @@
+version: 2
+
+sources:
+  - name: olist_raw
+    description: Raw Olist e-commerce data loaded from CSV files
+    database: ecom
+    schema: public
+    tables:
+      - name: customers
+        description: Customer information
+        columns:
+          - name: customer_id
+            description: Unique customer identifier
+            tests:
+              - unique
+              - not_null
+              
+      - name: sellers
+        description: Seller information
+        columns:
+          - name: seller_id
+            description: Unique seller identifier
+            tests:
+              - unique
+              - not_null
+              
+      - name: products
+        description: Product catalog
+        columns:
+          - name: product_id
+            description: Unique product identifier
+            tests:
+              - unique
+              - not_null
+              
+      - name: orders
+        description: Order information
+        columns:
+          - name: order_id
+            description: Unique order identifier
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            description: Reference to customer
+            tests:
+              - not_null
+              
+      - name: order_items
+        description: Items within each order
+        
+      - name: order_payments
+        description: Payment information for orders
+        
+      - name: order_reviews
+        description: Customer reviews
+        columns:
+          - name: review_id
+            description: Unique review identifier
+            tests:
+              - unique
+              - not_null
+              
+      - name: geolocation
+        description: Geolocation data by zip code
+        
+      - name: product_category_translation
+        description: Translation of product categories to English

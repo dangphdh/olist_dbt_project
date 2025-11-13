@@ -1,0 +1,54 @@
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'olist_ecommerce'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'olist_ecommerce'
+
+# These configurations specify where dbt should look for different types of files.
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  olist_ecommerce:
+    # Config indicated by + and applies to all files under models/staging/
+    staging:
+      +materialized: view
+      +schema: staging
+      
+    # Config for intermediate models
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+      
+    # Config for marts (final analytics tables)
+    marts:
+      +materialized: table
+      +schema: marts
+
+# Seeds configuration
+seeds:
+  olist_ecommerce:
+    +schema: seeds
+    +quote_columns: false
+
+# Variables
+vars:
+  # The start date for filtering data
+  start_date: '2017-01-01'
+  # The end date for filtering data  
+  end_date: '2018-12-31'
