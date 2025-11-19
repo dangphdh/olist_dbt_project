@@ -14,32 +14,104 @@ models:
         tests:
           - not_null
           
+      - name: order_purchase_timestamp
+        description: Timestamp when the order was placed
+        
       - name: order_date
         description: Date when the order was placed
         tests:
           - not_null
           
+      - name: order_month
+        description: Month of the order
+        
+      - name: order_year
+        description: Year of the order
+        
+      - name: order_quarter
+        description: Quarter of the order
+        
+      - name: order_month_num
+        description: Month number of the order
+        
+      - name: order_day_of_week
+        description: Day of week when order was placed
+        
       - name: customer_id
         description: Customer who placed the order
         tests:
           - not_null
           
+      - name: customer_city
+        description: Customer city
+        
+      - name: customer_state
+        description: Customer state
+        
+      - name: order_status
+        description: Current status of the order
+        
       - name: product_id
         description: Product that was purchased
         tests:
           - not_null
           
+      - name: product_category_name
+        description: Product category name in Portuguese
+        
+      - name: product_category_name_english
+        description: Product category name in English
+        
       - name: seller_id
         description: Seller who fulfilled the order
         tests:
           - not_null
           
+      - name: seller_city
+        description: Seller city
+        
+      - name: seller_state
+        description: Seller state
+        
+      - name: item_price
+        description: Price of the item
+        
+      - name: freight_value
+        description: Freight value for the item
+        
       - name: total_item_value
         description: Total value of the line item (price + freight)
         tests:
           - not_null
           - dbt_utils.expression_is_true:
               expression: ">= 0"
+              
+      - name: delivery_status
+        description: Delivery status (on_time, late, pending)
+        
+      - name: total_delivery_days
+        description: Total delivery days for the order
+        
+      - name: days_early_late
+        description: Days early (negative) or late (positive) compared to estimated delivery
+        
+      - name: has_credit_card
+        description: Whether the order includes credit card payment
+        
+      - name: has_boleto
+        description: Whether the order includes boleto payment
+        
+      - name: has_voucher
+        description: Whether the order includes voucher payment
+        
+      - name: has_debit_card
+        description: Whether the order includes debit card payment
+        
+      - name: product_avg_rating
+        description: Average rating of the product
+        
+      - name: product_review_count
+        description: Number of reviews for the product
               
   - name: fct_daily_sales_metrics
     description: Daily aggregated sales metrics for reporting and analysis
@@ -50,12 +122,75 @@ models:
           - unique
           - not_null
           
+      - name: order_month
+        description: Month of the orders
+        
+      - name: order_year
+        description: Year of the orders
+        
+      - name: order_quarter
+        description: Quarter of the orders
+        
+      - name: total_orders
+        description: Total number of orders for the day
+        
+      - name: total_items
+        description: Total number of items sold
+        
+      - name: gross_revenue
+        description: Gross revenue (item prices only)
+        
+      - name: freight_revenue
+        description: Revenue from freight charges
+        
       - name: total_revenue
         description: Total revenue for the day
         tests:
           - not_null
           - dbt_utils.expression_is_true:
               expression: ">= 0"
+              
+      - name: avg_order_item_value
+        description: Average order item value
+        
+      - name: unique_customers
+        description: Number of unique customers
+        
+      - name: unique_products
+        description: Number of unique products sold
+        
+      - name: unique_categories
+        description: Number of unique product categories
+        
+      - name: unique_sellers
+        description: Number of unique sellers
+        
+      - name: avg_delivery_days
+        description: Average delivery days
+        
+      - name: late_deliveries
+        description: Number of late deliveries
+        
+      - name: total_deliveries
+        description: Total number of deliveries
+        
+      - name: credit_card_orders
+        description: Number of orders with credit card payment
+        
+      - name: boleto_orders
+        description: Number of orders with boleto payment
+        
+      - name: voucher_orders
+        description: Number of orders with voucher payment
+        
+      - name: debit_card_orders
+        description: Number of orders with debit card payment
+        
+      - name: late_delivery_rate_pct
+        description: Late delivery rate percentage
+        
+      - name: revenue_per_customer
+        description: Average revenue per customer
               
   - name: fct_product_category_performance
     description: Performance metrics aggregated by product category
@@ -66,10 +201,55 @@ models:
           - unique
           - not_null
           
+      - name: total_orders
+        description: Total number of orders in this category
+        
+      - name: total_items_sold
+        description: Total number of items sold in this category
+        
+      - name: gross_revenue
+        description: Gross revenue from item prices
+        
+      - name: freight_revenue
+        description: Revenue from freight charges
+        
       - name: total_revenue
         description: Total revenue for this category
         tests:
           - not_null
+          
+      - name: avg_item_price
+        description: Average item price in this category
+        
+      - name: avg_total_item_value
+        description: Average total item value (including freight)
+        
+      - name: unique_products
+        description: Number of unique products in this category
+        
+      - name: unique_customers
+        description: Number of unique customers who purchased from this category
+        
+      - name: avg_delivery_days
+        description: Average delivery days for this category
+        
+      - name: late_deliveries
+        description: Number of late deliveries
+        
+      - name: total_deliveries
+        description: Total number of deliveries
+        
+      - name: avg_category_rating
+        description: Average rating for products in this category
+        
+      - name: total_reviews
+        description: Total number of reviews for this category
+        
+      - name: late_delivery_rate_pct
+        description: Late delivery rate percentage
+        
+      - name: revenue_share_pct
+        description: Revenue share percentage of total revenue
           
   - name: dim_customers
     description: Customer dimension table with lifetime metrics and segmentation
@@ -80,11 +260,59 @@ models:
           - unique
           - not_null
           
+      - name: customer_unique_id
+        description: Unique customer identifier across all customer records
+        
+      - name: customer_zip_code_prefix
+        description: Customer zip code prefix
+        
+      - name: customer_city
+        description: Customer city
+        
+      - name: customer_state
+        description: Customer state
+        
+      - name: total_orders
+        description: Total number of orders placed by customer
+        
+      - name: lifetime_value
+        description: Total lifetime value of customer
+        
+      - name: avg_order_value
+        description: Average order value for customer
+        
+      - name: first_order_date
+        description: Date of first order
+        
+      - name: last_order_date
+        description: Date of last order
+        
+      - name: avg_delivery_days
+        description: Average delivery days for customer orders
+        
+      - name: delivered_orders
+        description: Number of delivered orders
+        
+      - name: canceled_orders
+        description: Number of canceled orders
+        
+      - name: late_deliveries
+        description: Number of late deliveries
+        
+      - name: customer_tenure_days
+        description: Days between first and last order
+        
       - name: customer_segment
         description: Customer segment (loyal, repeat, one_time)
         tests:
           - accepted_values:
               values: ['loyal', 'repeat', 'one_time']
+              
+      - name: value_segment
+        description: Customer value segmentation (high_value, medium_value, low_value)
+        
+      - name: late_delivery_rate
+        description: Rate of late deliveries for this customer
               
   - name: dim_products
     description: Product dimension table with enriched attributes and metrics
@@ -95,6 +323,66 @@ models:
           - unique
           - not_null
           
+      - name: product_category_name
+        description: Product category name in Portuguese
+        
+      - name: product_category_name_english
+        description: Product category name in English
+        
+      - name: product_name_length
+        description: Length of the product name
+        
+      - name: product_description_length
+        description: Length of the product description
+        
+      - name: product_photos_quantity
+        description: Number of product photos
+        
+      - name: product_weight_grams
+        description: Product weight in grams
+        
+      - name: product_length_cm
+        description: Product length in centimeters
+        
+      - name: product_height_cm
+        description: Product height in centimeters
+        
+      - name: product_width_cm
+        description: Product width in centimeters
+        
+      - name: product_volume_cm3
+        description: Product volume in cubic centimeters
+        
+      - name: total_orders
+        description: Total number of orders containing this product
+        
+      - name: total_revenue
+        description: Total revenue generated by this product
+        
+      - name: avg_price
+        description: Average price of this product
+        
+      - name: total_freight
+        description: Total freight cost for this product
+        
+      - name: avg_freight
+        description: Average freight cost for this product
+        
+      - name: review_count
+        description: Number of reviews for this product
+        
+      - name: avg_review_score
+        description: Average review score for this product
+        
+      - name: five_star_count
+        description: Number of 5-star reviews
+        
+      - name: one_star_count
+        description: Number of 1-star reviews
+        
+      - name: quality_score
+        description: Quality score based on reviews (only if review count >= 10)
+          
   - name: dim_sellers
     description: Seller dimension table with performance metrics and segmentation
     columns:
@@ -104,6 +392,78 @@ models:
           - unique
           - not_null
           
+      - name: seller_zip_code_prefix
+        description: Seller zip code prefix
+        
+      - name: seller_city
+        description: Seller city
+        
+      - name: seller_state
+        description: Seller state
+        
+      - name: total_orders
+        description: Total number of orders fulfilled by seller
+        
+      - name: total_items_sold
+        description: Total number of items sold by seller
+        
+      - name: total_revenue
+        description: Total revenue generated by this seller
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+              
+      - name: avg_item_price
+        description: Average item price for seller
+        
+      - name: total_freight
+        description: Total freight charged by seller
+        
+      - name: avg_freight
+        description: Average freight charged by seller
+        
+      - name: min_item_price
+        description: Minimum item price for seller
+        
+      - name: max_item_price
+        description: Maximum item price for seller
+        
+      - name: review_count
+        description: Number of reviews for seller's products
+        
+      - name: avg_review_score
+        description: Average review score for seller's products
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+          - dbt_utils.expression_is_true:
+              expression: "<= 5"
+              
+      - name: five_star_count
+        description: Number of 5-star reviews
+        
+      - name: one_star_count
+        description: Number of 1-star reviews
+        
+      - name: avg_delivery_days
+        description: Average delivery days for seller's orders
+        
+      - name: on_time_deliveries
+        description: Number of on-time deliveries
+        
+      - name: total_delivered_orders
+        description: Total number of delivered orders
+        
+      - name: on_time_delivery_rate
+        description: Percentage of deliveries made on time or early
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+          - dbt_utils.expression_is_true:
+              expression: "<= 1"
+              
       - name: seller_segment
         description: Seller segment based on order volume (high_volume, medium_volume, low_volume, inactive)
         tests:
@@ -116,26 +476,5 @@ models:
           - accepted_values:
               values: ['high_revenue', 'medium_revenue', 'low_revenue', 'no_revenue']
               
-      - name: total_revenue
-        description: Total revenue generated by this seller
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: ">= 0"
-              
-      - name: avg_review_score
-        description: Average review score for seller's products
-        tests:
-          - dbt_utils.expression_is_true:
-              expression: ">= 0"
-          - dbt_utils.expression_is_true:
-              expression: "<= 5"
-              
-      - name: on_time_delivery_rate
-        description: Percentage of deliveries made on time or early
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: ">= 0"
-          - dbt_utils.expression_is_true:
-              expression: "<= 1"
+      - name: quality_score
+        description: Quality score based on reviews (only if review count >= 10)
